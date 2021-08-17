@@ -1,0 +1,422 @@
+<html>
+  <head>
+    <title>Radar Chart Small Multiples</title>
+    <script src='https://www.gstatic.com/charts/loader.js'></script>
+    <script>
+      google.charts.load('upcoming', {'packages': ['vegachart']}).then(loadCharts);
+
+      const lasagna1 = [
+        ["地盤分類",3, "日本橋室町１丁目"],
+        ["建物倒壊危険度",1, "日本橋室町一丁目"],
+        ["火災危険度",2, "日本橋室町一丁目"],
+        ["洪水ハザード",1, "日本橋室町一丁目"],
+        ["浸水ハザード",2, "日本橋室町一丁目"],
+        ["高潮ハザード",0, "日本橋室町一丁目"],
+        ["総合危険度",5, "日本橋室町一丁目"]
+      ];
+
+      function loadCharts() {
+        addChart(lasagna1[0][2], lasagna1, "#FF0000");
+      };
+
+      function addChart(title, data, color) {
+        const dataTable = new google.visualization.DataTable();
+        dataTable.addColumn({type: 'string', 'id': 'key'});
+        dataTable.addColumn({type: 'number', 'id': 'value'});
+        dataTable.addColumn({type: 'string', 'id': 'category'});
+        dataTable.addRows(data);
+
+        const options = {
+          'vega': {
+            "$schema": "https://vega.github.io/schema/vega/v5.json",
+            "width": 500,
+            "height": 500,
+            "padding": 40,
+            "autosize": "none",
+            "title": {
+              "text": title,
+              "anchor": "middle",
+              "fontSize": 24,
+              "dy": -50,
+              "dx": {"signal": "-width/2 + 100"},
+              "subtitle": "(C) 2021 東京大学情報学環"
+            },
+            "signals": [
+              {"name": "radius", "update": "30"}
+            ],
+
+            "data": [
+              {
+                "name": "table",
+                "source": "datatable",
+              },
+              {
+                "name": "keys",
+                "source": "table",
+                "transform": [
+                  {
+                    "type": "aggregate",
+                    "groupby": ["key"]
+                  }
+                ]
+              }
+            ],
+
+            "scales": [
+              {
+                "name": "angular",
+                "type": "point",
+                "range": {"signal": "[-PI, PI]"},
+                "padding": 0.5,
+                "domain": {"data": "table", "field": "key"}
+              },
+              {
+                "name": "radial",
+                "type": "linear",
+                "range": {"signal": "[0, radius]"},
+                "zero": true,
+                "nice": false,
+                "domain": [0,1],
+              }
+            ],
+
+            "encode": {
+              "enter": {
+                "x": {"signal": "width/2"},
+                "y": {"signal": "height/2 + 20"}
+              }
+            },
+
+            "marks": [
+              {
+                "type": "group",
+                "name": "categories",
+                "zindex": 1,
+                "from": {
+                  "facet": {"data": "table", "name": "facet", "groupby": ["category"]}
+                },
+
+                "marks": [
+                  {
+                    "type": "line",
+                    "name": "category-line",
+                    "from": {"data": "facet"},
+                    "encode": {
+                      "enter": {
+                        "interpolate": {"value": "linear-closed"},
+                        "x": {"signal": "scale('radial', datum.value) * cos(scale('angular', datum.key))"},
+                        "y": {"signal": "scale('radial', datum.value) * sin(scale('angular', datum.key))"},
+                        "stroke": {"value": color},
+                        "strokeWidth": {"value": 1.5},
+                        "fill": {"value": color},
+                        "fillOpacity": {"value": 0.1}
+                      }
+                    }
+                  },
+
+                  {
+                    "type": "text",
+                    "name": "value-text",
+                    "from": {"data": "category-line"},
+                    "encode": {
+                      "enter": {
+                        "x": {"signal": "datum.x + 14 * cos(scale('angular', datum.datum.key))"},
+                        "y": {"signal": "datum.y + 14 * sin(scale('angular', datum.datum.key))"},
+                        "text": {"signal": "format(datum.datum.value,'.2')"},
+                        "opacity": {"signal": "datum.datum.value > 0.01 ? 1 : 0"},
+                        "align": {"value": "center"},
+                        "baseline": {"value": "middle"},
+                        "fontWeight": {"value": "bold"},
+                        "fill": {"value": color},
+                      }
+                    }
+                  }
+                ]
+
+              },
+
+              {
+                "type": "rule",
+                "name": "radial-grid",
+                "from": {"data": "keys"},
+                "zindex": 0,
+                "encode": {
+                  "enter": {
+                    "x": {"value": 0},
+                    "y": {"value": 0},
+                    "x2": {"signal": "6*radius * cos(scale('angular', datum.key))"},
+                    "y2": {"signal": "6*radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "lightgray"},
+                    "strokeWidth": {"value": 1}
+                  }
+                }
+              },
+
+
+              {
+                "type": "text",
+                "name": "key-label",
+                "from": {"data": "keys"},
+                "zindex": 1,
+                "encode": {
+                  "enter": {
+                    "x": {"signal": "(5*radius + 50) * cos(scale('angular', datum.key))"},
+                    "y": [
+                      {
+                        "test": "sin(scale('angular', datum.key)) > 0",
+                        "signal": "5 + (5*radius + 50) * sin(scale('angular', datum.key))"
+                      },
+                      {
+                        "test": "sin(scale('angular', datum.key)) < 0",
+                        "signal": "-5 + (5*radius + 50) * sin(scale('angular', datum.key))"
+                      },
+                      {
+                        "signal": "(5*radius + 50) * sin(scale('angular', datum.key))"
+                      }
+                    ],
+                    "text": {"field": "key"},
+                    "align":
+                      {
+                        "value": "center"
+                      },
+                    "baseline": [
+                      {
+                        "test": "scale('angular', datum.key) > 0", "value": "top"
+                      },
+                      {
+                        "test": "scale('angular', datum.key) == 0", "value": "middle"
+                      },
+                      {
+                        "value": "bottom"
+                      }
+                    ],
+                    "fill": {"value": "black"},
+                    "fontSize": {"value": 12}
+                  }
+                }
+              },
+
+              //------------
+              {
+                "type": "line",
+                "name": "twenty-line",
+                "from": {"data": "keys"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "1 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "1 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "lightblue"},
+                    "strokeWidth": {"value": 3}
+                  }
+                }
+              },
+              {
+                "type": "line",
+                "name": "fourty-line",
+                "from": {"data": "keys"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "2 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "2 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "blue"},
+                    "strokeWidth": {"value": 3}
+                  }
+                }
+              },
+              {
+                "type": "line",
+                "name": "sixty-line",
+                "from": {"data": "keys"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "3 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "3 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "green"},
+                    "strokeWidth": {"value": 3}
+                  }
+                }
+              },
+              {
+                "type": "line",
+                "name": "eighty-line",
+                "from": {"data": "keys"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "4 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "4 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "orange"},
+                    "strokeWidth": {"value": 3}
+                  }
+                }
+              },
+              {
+                "type": "line",
+                "name": "100-line",
+                "from": {"data": "keys"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "5 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "5 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "red"},
+                    "strokeWidth": {"value": 3}
+                  }
+                }
+              },              
+              {
+                "type": "line",
+                "name": "outer-line",
+                "from": {"data": "radial-grid"},
+                "encode": {
+                  "enter": {
+                    "interpolate": {"value": "linear-closed"},
+                    "x": {"signal": "5 * radius * cos(scale('angular', datum.key))"},
+                    "y": {"signal": "5 * radius * sin(scale('angular', datum.key))"},
+                    "stroke": {"value": "green"},
+                    "strokeWidth": {"value": 10}
+                  }
+                }
+              }
+              //------------
+
+
+            ]
+          }
+        };
+
+        const elem = document.createElement("div");
+        elem.setAttribute("style", "display: inline-block; width: 600px; height: 600px; padding: 20px;");
+
+        const chart = new google.visualization.VegaChart(elem);
+        chart.draw(dataTable, options);
+
+        document.getElementById("chart-area").appendChild(elem);
+      }
+    </script>
+
+
+     <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data2 = new google.visualization.DataTable(); 
+
+data2.addColumn('string', '項目');            
+data2.addColumn('string', '値');
+data2.addRows([
+['KEYCODE', "13102013001"],
+['丁目名', "日本橋室町１丁目 "],
+['人口総数',  "156"],
+['人口（男）', "71"],
+['人口（女）', "85"],
+['世帯数', "91"],
+['面積', "72602平方m"],
+['周辺長', "1164m"],
+['地盤分類', "1"],
+['建物倒壊危険度', "3"],
+['火災危険度', "1"],
+['総合危険度', "1"],
+['浸水予想', "-"],
+['洪水ハザード(1)', "-"],
+['洪水ハザード(2)', "-"],
+['高潮浸水想定', "-"],
+['浸水実績', "有"],
+['土砂崩れハザード', "-"],
+['防災拠点（地震緊急避難場所）', "常磐小学校"],
+['防災副拠点', " "],
+['福祉避難所', " "],
+['一次避難場所', " "],
+['広域避難場所', " "],
+['災害拠点病院', "聖路加病院"],
+['災害医療コーディネーター', "布施明・増野智彦（日医大病院）"],
+['災害時小児周産期リエゾン', "垣内五月・熊澤惠一（東大病院）"]
+]);
+
+        var table2 = new google.visualization.Table(document.getElementById('table_div2'));
+
+        table2.draw(data2);
+      }
+    </script>
+
+ 
+  </head>
+
+  <body>
+    <hr>
+    <h2><center>日本橋防災カルテ（三井不動産東大ラボ）</center></h2>
+    <h1><center>日本橋室町１丁目</center></h1>
+    <hr>
+
+<h2>1. 中央区防災概況</h2>
+<h3>1.1 指定避難所</h3>
+<P>
+指定避難所は、災害が発生または発生するおそれがある場合に、焼失や倒壊により自宅での生活が困難になった方、またはその危険性がある方を一時的に滞在させるための施設です。主に学校等の区施設を指定しています。
+</P>
+
+<h4>（1）避難所（防災拠点）（23カ所）</h4>
+<P>
+大地震などが発生した際に、自宅での生活ができなくなった方などが一定期間避難生活を送るための施設として、区立小・中学校などの公共施設23カ所を指定しています。
+</P>
+
+<h4>（2）副拠点（6カ所）</h4>
+<P>
+  避難者が増加し防災拠点に収容が不可能となった場合には、副拠点（主に寝泊りする場所）を開設します。なお、晴海地域においては、防災拠点までの距離を考慮して発災当初から副拠点を開設します。
+</P>
+
+<h4>（3）福祉避難所等（体制が整い次第順次開設：12カ所）</h4>
+<P>
+  防災拠点で避難生活を送ることが困難な要介護高齢者や障害のある方などを対象に福祉避難所を開設します。なお、専門的な介護などが必要で自宅や防災拠点での療養が困難な方は、特別養護老人ホームなどにおいて緊急入所による対応を行います。
+</P>
+
+<h3>1.2 指定緊急避難場所</h3>
+<P>
+災害が発生または発生するおそれがある場合に、その危険から逃れるための避難場所として災害の種類ごとに施設や場所を指定しています。
+</P>
+
+<h4>（1）地震</h4>
+<P>
+避難所（防災拠点）の23カ所、ほっとプラザはるみ
+</P>
+
+<h4>（2）大規模な火事</h4>
+<P>
+広域避難場所の4カ所、または地区内残留（地区内残留地区＝木造の建物が少なく街区のほとんどがビルに囲まれているため、火災が発生しても延焼しにくいと想定される地域です。基本的には広域避難場所への避難は不要ですが、防災関係機関から避難勧告が出された場合には、その指示に従って指定の場所へ避難することになります。）
+</P>
+
+<h4>（3）洪水・浸水・高潮</h4>
+<P>
+避難所（防災拠点）の23カ所、ほっとプラザはるみ、中央区役所、日本橋区民センター、月島区民センター
+</P>
+
+<h4>（4）津波</h4>
+<P>
+佃島小学校、月島第一小学校、月島第二小学校、豊海小学校、佃中学校、月島区民センター
+</P>
+
+<hr>
+
+    <center>
+          <h2> 地域別防災レーダーチャート</h2>
+<p>なお、本カルテを作成したデータ本体は、 <a href = "./tablechart.html">これ</a>です。</p>
+
+    <table>
+      <tr>
+        <th><div id="chart-area"></div></th>
+        <th><div id="table_div2"></div></th>
+      </tr>
+  </table>
+    </center>
+
+  </body>
+
+  <address>
+    <hr>
+    (C) 2021 三井不動産東大ラボWG3, 越塚登研究室, All Rights Reserved.
+    <hr>
+  </address>
+</html>
