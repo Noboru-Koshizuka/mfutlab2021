@@ -5,4 +5,4 @@
 
 ### [カルテページの例](https://noboru-koshizuka.github.io/mfutlab2021/carte.html)
 
-### [データ全体のビュー](https://noboru-koshizuka.github.io/mfutlab2021/tablechart.html)
+### [データ全体のビュー](https://noboru-koshizuka.github.io/mfutlab2021/014.tablechart.html)
