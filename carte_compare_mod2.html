@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>中央区防災比較データ</title>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+</head>
+
+<body>
+<hr>
+<h1><center>日本橋防災カルテ<br>（三井不動産東大ラボ）</center></h1>
+<hr>
+<h2>町丁別防災データ</h2>
+<p> 自治体番号を入れることで、防災関連情報を個別に表示。</p>
+
+
+<form name="form1">
+	<select name="cityname">
+		<option value="131020070">明石町</option>
+		<option value="131020090">浜離宮庭園</option>
+		<option value="131020150">日本橋小舟町</option>
+		<option value="131020160">日本橋小伝馬町</option>
+		<option value="131020170">日本橋大伝馬町</option>
+		<option value="131020190">日本橋富沢町</option>
+		<option value="131020210">日本橋小網町</option>
+		<option value="131020230">日本橋箱崎町</option>
+		<option value="131020250">日本橋横山町</option>
+		<option value="131020270">日本橋久松町</option>
+		<option value="131020290">日本橋中洲</option>
+		<option value="131020330">日本橋兜町</option>
+		<option value="131020370">豊海町</option>
+		<option value="13102001001">八重洲１丁目</option>
+		<option value="13102001002">八重洲２丁目</option>
+		<option value="13102002001">京橋１丁目</option>
+		<option value="13102002002">京橋２丁目</option>
+		<option value="13102002003">京橋３丁目</option>
+		<option value="13102003001">銀座１丁目</option>
+		<option value="13102003002">銀座２丁目</option>
+		<option value="13102003003">銀座３丁目</option>
+		<option value="13102003004">銀座４丁目</option>
+		<option value="13102003005">銀座５丁目</option>
+		<option value="13102003006">銀座６丁目</option>
+		<option value="13102003007">銀座７丁目</option>
+		<option value="13102003008">銀座８丁目</option>
+		<option value="13102004001">新富１丁目</option>
+		<option value="13102004002">新富２丁目</option>
+		<option value="13102005001">入船１丁目</option>
+		<option value="13102005002">入船２丁目</option>
+		<option value="13102005003">入船３丁目</option>
+		<option value="13102006001">湊１丁目</option>
+		<option value="13102006002">湊２丁目</option>
+		<option value="13102006003">湊３丁目</option>
+		<option value="13102008001">築地１丁目</option>
+		<option value="13102008002">築地２丁目</option>
+		<option value="13102008003">築地３丁目</option>
+		<option value="13102008004">築地４丁目</option>
+		<option value="13102008005">築地５丁目</option>
+		<option value="13102008006">築地６丁目</option>
+		<option value="13102008007">築地７丁目</option>
+		<option value="13102010001">八丁堀１丁目</option>
+		<option value="13102010002">八丁堀２丁目</option>
+		<option value="13102010003">八丁堀３丁目</option>
+		<option value="13102010004">八丁堀４丁目</option>
+		<option value="13102011001">新川１丁目</option>
+		<option value="13102011002">新川２丁目</option>
+	</select>
+</form>
+<input type="button" value="選択" onclick="clickBtn1()"/>
+
+<form name="bodycheck" id="bodycheck">
+　<b>→</b>
+自治体名: <input type="text" name="PREFECTURE" size=10 value=""> 
+町丁名: <input type="text" name="CITY" size=10 value="">　
+</form>
+<p>選択した自治体番号： <span id="span1"></span></p>
+
+<br>
+<input type="button" onclick="google.charts.setOnLoadCallback(drawTable);" value="チャート表示"><br><br>
+
+<table>
+      <tr>
+        <th>
+					<div id="table_div"></div>
+				</th>
+				<th>＿＿＿＿＿＿
+				</th>
+				<th>
+					<div>
+						<img id="image01" src="https://quickchart.io/chart?width=300&height=300&c={type:'radar',data:{labels:['地盤分類','建物倒壊危険度', '火災危険度','洪水ハザード', '浸水ハザード', '高潮ハザード', '総合危険度'], datasets:[{label:'DUMMY日本橋室町１丁目',data:[3, 2, 2, 1, 2, 3, 3]}]},options:{scale:{ticks:{suggestedMin:0,suggestedMax:5}}}}">
+					</div>
+				</th>
+			</tr>
+</table>
+
+<hr>
+
+<h2>1. 中央区防災概況</h2>
+<h3>1.1 指定避難所</h3>
+<P>
+指定避難所は、災害が発生または発生するおそれがある場合に、焼失や倒壊により自宅での生活が困難になった方、またはその危険性がある方を一時的に滞在させるための施設です。主に学校等の区施設を指定しています。
+</P>
+
+<h4>（1）避難所（防災拠点）（23カ所）</h4>
+<P>
+大地震などが発生した際に、自宅での生活ができなくなった方などが一定期間避難生活を送るための施設として、区立小・中学校などの公共施設23カ所を指定しています。
+</P>
+
+<h4>（2）副拠点（6カ所）</h4>
+<P>
+  避難者が増加し防災拠点に収容が不可能となった場合には、副拠点（主に寝泊りする場所）を開設します。なお、晴海地域においては、防災拠点までの距離を考慮して発災当初から副拠点を開設します。
+</P>
+
+<h4>（3）福祉避難所等（体制が整い次第順次開設：12カ所）</h4>
+<P>
+  防災拠点で避難生活を送ることが困難な要介護高齢者や障害のある方などを対象に福祉避難所を開設します。なお、専門的な介護などが必要で自宅や防災拠点での療養が困難な方は、特別養護老人ホームなどにおいて緊急入所による対応を行います。
+</P>
+
+<h3>1.2 指定緊急避難場所</h3>
+<P>
+災害が発生または発生するおそれがある場合に、その危険から逃れるための避難場所として災害の種類ごとに施設や場所を指定しています。
+</P>
+
+<h4>（1）地震</h4>
+<P>
+避難所（防災拠点）の23カ所、ほっとプラザはるみ
+</P>
+
+<h4>（2）大規模な火事</h4>
+<P>
+広域避難場所の4カ所、または地区内残留（地区内残留地区＝木造の建物が少なく街区のほとんどがビルに囲まれているため、火災が発生しても延焼しにくいと想定される地域です。基本的には広域避難場所への避難は不要ですが、防災関係機関から避難勧告が出された場合には、その指示に従って指定の場所へ避難することになります。）
+</P>
+
+<h4>（3）洪水・浸水・高潮</h4>
+<P>
+避難所（防災拠点）の23カ所、ほっとプラザはるみ、中央区役所、日本橋区民センター、月島区民センター
+</P>
+
+<h4>（4）津波</h4>
+<P>
+佃島小学校、月島第一小学校、月島第二小学校、豊海小学校、佃中学校、月島区民センター
+</P>
+
+<hr>
+(C) 2021 Koshizuka-lab, All Rights Reserved.
+<hr>
+
+
+<script src='https://www.gstatic.com/charts/loader.js'></script>
+<script type="text/javascript">
+// ======================================================
+// スクリプト部分
+// ======================================================
+
+
+var result = []; // 読み込んだCSVデータを格納する最終的な二次元配列
+var nn = 0;
+
+// CSVファイルを読み込む関数getCSV()の定義
+function getCSV(){
+    var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+    req.open("get", "https://noboru-koshizuka.github.io/mfutlab2021/disaster_prevention_data_001.csv", true); // アクセスするファイルを指定
+    req.send(null); // HTTPリクエストの発行
+	
+    // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+    req.onload = function(){
+			convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    }
+}
+ 
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+	var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+
+	// 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+	for(var i = 0; i < tmp.length ; ++i){
+	    result[i] = tmp[i].split(',');
+	}
+}
+
+// ----------------
+// 処理開始部分　↓↓↓↓
+// ----------------
+
+getCSV(); //最初に実行される。GithubからCSVデータ読み込む
+
+google.charts.load('current', {'packages':['table']});
+google.charts.setOnLoadCallback(drawTable);
+
+function drawTable() {
+	var data = new google.visualization.DataTable(); 
+
+	data.addColumn('string', '項目'); 
+	data.addColumn('string', 'データ'); 
+
+	data.addRows([
+		['番号', result[nn][0]], 
+		['自治体コード', result[nn][1]],
+		['町丁名', result[nn][2]],
+		['人口総数', result[nn][3]],
+		['人口（男）', result[nn][4]],
+		['人口（女）', result[nn][5]],
+		['世帯数', result[nn][6]],
+		['面積', result[nn][7]],
+		['周辺長', result[nn][8]],
+		['経度', result[nn][9]],
+		['緯度', result[nn][10]],
+		['地盤分類', result[nn][11]],
+		['建物倒壊危険度危険量（棟/ha）', result[nn][12]],
+		['建物倒壊危険度順位', result[nn][13]],
+		['建物倒壊危険度ランク', result[nn][14]],
+		['火災危険度危険量（棟/ha）', result[nn][15]],
+		['火災危険度順位', result[nn][16]],
+		['火災危険度ランク', result[nn][17]],
+		['災害時活動困難度', result[nn][18]],
+		['災害時活動困難度順位', result[nn][19]],
+		['災害時活動困難度ランク', result[nn][20]],
+		['総合危険度危険量（棟/ha）', result[nn][21]],
+		['総合危険度順位', result[nn][22]],
+		['総合危険度ランク', result[nn][23]],
+		['防災拠点（地震緊急避難場所）', result[nn][24]]
+	]);
+
+	var table = new google.visualization.Table(document.getElementById('table_div'));
+
+	table.draw(data);
+
+ 	var elem = document.getElementById("image01");
+
+  elem.src = "https://quickchart.io/chart?width=300&height=300&c={type:'radar',data:{labels:['地盤分類','建物倒壊危険度', '火災危険度','洪水ハザード', '浸水ハザード', '高潮ハザード', '総合危険度'], datasets:[{label:'DUMMY日本橋室町１丁目',data:[5, 5, 5, 1, 2, 3, 3]}]},options:{scale:{ticks:{suggestedMin:0,suggestedMax:5}}}}";
+
+}
+
+
+function clickBtn1(){
+
+	const cityname = document.form1.cityname;
+
+	// 値(数値)を取得
+	const num = cityname.selectedIndex;
+
+	// 値(数値)から値(value値)を取得
+	const str = cityname.options[num].value;
+
+	document.getElementById("span1").textContent = str; 
+
+
+
+		var ww = eval(str);
+		var hh;
+		var found = 0;
+
+	  console.log(ww); // 取得した内容の確認用
+
+	    // データから入力された市区町村番号のエントリーがあるか探す
+		for(i = 0 ; i  < result.length ; i++){
+			if(Number(result[i][1]) == ww){
+				found = 1;
+				hh = i;
+				nn = i;
+			}
+		}
+
+		// 探しているエントリーが発見されたら実行
+		if(found == 1){
+			var a = result[hh];
+			
+			// データ取り出し
+			prefecture  = '中央区';
+			city = a[2];
+
+			// text boxへの入力
+			document.bodycheck.PREFECTURE.value= prefecture;
+			document.bodycheck.CITY.value= city;
+
+		} else{
+			// text boxへの入力
+			document.bodycheck.PREFECTURE.value= "範囲外です";
+			document.bodycheck.CITY.value= "範囲外です";
+		}
+}
+
+</script>
+</body>
+</html>
