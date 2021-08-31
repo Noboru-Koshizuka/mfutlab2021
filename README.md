@@ -3,4 +3,4 @@
 
 ### [カルテページの例](https://noboru-koshizuka.github.io/mfutlab2021/carte_compare_mod2.html)
 
-### [データ全体のビュー](https://noboru-koshizuka.github.io/mfutlab2021/022.tablechart.html)
+### [データ全体のビュー](https://noboru-koshizuka.github.io/mfutlab2021/022.tablechar.html)
